@@ -6,42 +6,40 @@
       "src": "frontend/package.json",
       "use": "@vercel/static-build",
       "config": {
-        "distDir": "frontend/dist"
+        "distDir": "frontend/dist" // 前端构建输出目录（确保和你前端项目的打包目录一致）
       }
     },
     {
       "src": "backend/requirements.txt",
-      "use": "@vercel/python"
+      "use": "@vercel/python",
+      "config": {
+        "runtime": "python3.9" // 把原 functions 里的 runtime 配置移到这里
+      }
     }
   ],
   "routes": [
     {
       "src": "/api/(.*)",
-      "dest": "/backend/config/asgi.py"
+      "dest": "/backend/config/asgi.py" // Django ASGI 入口（确保路径正确）
     },
     {
       "src": "/admin/(.*)",
-      "dest": "/backend/config/asgi.py"
+      "dest": "/backend/config/asgi.py" // Django 后台路由
     },
     {
       "src": "/static/(.*)",
-      "dest": "/static/$1"
+      "dest": "/static/$1" // Django 静态文件（需确保前端构建后静态文件输出到该目录）
     },
     {
       "src": "/media/(.*)",
-      "dest": "/media/$1"
+      "dest": "/media/$1" // Django 媒体文件（如用户上传的文件）
     },
     {
       "src": "/(.*)",
-      "dest": "/frontend/index.html"
+      "dest": "/frontend/index.html" // 前端 SPA 路由 fallback（刷新不 404）
     }
   ],
   "env": {
-    "DJANGO_SETTINGS_MODULE": "config.settings.production"
-  },
-  "functions": {
-    "backend/config/asgi.py": {
-      "runtime": "python3.9"
-    }
+    "DJANGO_SETTINGS_MODULE": "config.settings.production" // Django 生产环境配置
   }
 }

@@ -1,0 +1,47 @@
+{
+  "version": 2,
+  "name": "personal-app",
+  "builds": [
+    {
+      "src": "frontend/package.json",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "frontend/dist"
+      }
+    },
+    {
+      "src": "backend/requirements.txt",
+      "use": "@vercel/python"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "/backend/config/asgi.py"
+    },
+    {
+      "src": "/admin/(.*)",
+      "dest": "/backend/config/asgi.py"
+    },
+    {
+      "src": "/static/(.*)",
+      "dest": "/static/$1"
+    },
+    {
+      "src": "/media/(.*)",
+      "dest": "/media/$1"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/frontend/index.html"
+    }
+  ],
+  "env": {
+    "DJANGO_SETTINGS_MODULE": "config.settings.production"
+  },
+  "functions": {
+    "backend/config/asgi.py": {
+      "runtime": "python3.9"
+    }
+  }
+}
